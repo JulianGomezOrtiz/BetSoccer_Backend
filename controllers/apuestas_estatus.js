@@ -51,7 +51,16 @@ router.post("/", async (req, res) => {
     estado,
     ganancia
   } = req.body;
-
+  console.log("Datos recibidos en la solicitud:", req.body);
+  console.log("id_usuario:", id_usuario);
+  console.log("id_partido:", id_partido);
+  console.log("id_cuenta:", id_cuenta);
+  console.log("apuesta_resultado:", apuesta_resultado);
+  console.log("monto:", monto);
+  console.log("cuota:", cuota);
+  console.log("estado:", estado);
+  console.log("ganancia:", ganancia);
+  
   // Validar que todos los datos requeridos estén presentes
   if (!id_usuario || !id_partido || !id_cuenta || !apuesta_resultado || !monto || !cuota) {
     return res.status(400).json({ error: "Faltan datos requeridos en la solicitud" });

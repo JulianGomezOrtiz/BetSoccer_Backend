@@ -41,16 +41,16 @@ router.get("/:id", async (req, res) => {
 
 // Ruta POST: Crear una nueva transacción
 router.post("/", async (req, res) => {
-  const { id_usuario, id_cuenta, tipo, monto, estado } = req.body;
+  const { id_usuario, id_cuenta, tipo, monto, fecha,  estado } = req.body;
 
   // Validar que todos los datos requeridos estén presentes
-  if (!id_usuario || !id_cuenta || !tipo || !monto || !estado) {
+  if (!id_usuario || !id_cuenta || !tipo || !monto || !fecha || !estado) {
     return res.status(400).json({ error: "Faltan datos requeridos en la solicitud" });
   }
 
   const queryInsert = `
-    INSERT INTO transacciones (id_transaccion, id_usuario, id_cuenta, tipo, monto, estado)
-    VALUES (transacciones_seq.NEXTVAL, :id_usuario, :id_cuenta, :tipo, :monto, :estado)
+    INSERT INTO transacciones (id_transaccion, id_usuario, id_cuenta, tipo, monto, fecha, estado)
+    VALUES (transacciones_seq.NEXTVAL, :id_usuario, :id_cuenta, :tipo, :monto, TO_TIMESTAMP(:fecha, 'YYYY-MM-DD HH24:MI:SS'), :estado)
   `;
 
   let connection;
@@ -61,6 +61,7 @@ router.post("/", async (req, res) => {
       id_cuenta,
       tipo,
       monto,
+      fecha,
       estado
     });
 
@@ -77,7 +78,7 @@ router.post("/", async (req, res) => {
 // Ruta PUT: Actualizar una transacción existente
 router.put("/:id", async (req, res) => {
   const transaccionId = req.params.id;
-  const { id_usuario, id_cuenta, tipo, monto, estado } = req.body;
+  const { id_usuario, id_cuenta, tipo, monto, fecha, estado } = req.body;
 
   let connection;
   try {
@@ -90,6 +91,8 @@ router.put("/:id", async (req, res) => {
           id_cuenta = :id_cuenta,
           tipo = :tipo,
           monto = :monto,
+          fecha = TO_TIMESTAMP(:fecha, 'YYYY-MM-DD HH24:MI:SS')
+,
           estado = :estado
       WHERE id_transaccion = :id
     `,
@@ -99,6 +102,7 @@ router.put("/:id", async (req, res) => {
         id_cuenta,
         tipo,
         monto,
+        fecha,
         estado
       }
     );

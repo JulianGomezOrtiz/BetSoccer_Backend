@@ -44,22 +44,20 @@ router.post("/", async (req, res) => {
   const {
     id_equipo_local,
     id_equipo_visitante,
-    fecha,
-    hora,
+    fecha, // Esperado en formato 'YYYY-MM-DD'
+    hora,  // Esperado en formato 'HH24:MI:SS'
     estadio,
     estado,
     marcador_local,
     marcador_visitante
   } = req.body;
 
-  // Validar que todos los datos requeridos estén presentes
-  if (!id_equipo_local || !id_equipo_visitante || !fecha || !hora) {
-    return res.status(400).json({ error: "Faltan datos requeridos en la solicitud" });
-  }
+  console.log("Datos recibidos:", { fecha, hora }); // Depuración para verificar datos
 
   const queryInsert = `
-    INSERT INTO partidos (id_partido, id_equipo_local, id_equipo_visitante, fecha, hora, estadio, estado, marcador_local, marcador_visitante)
-    VALUES (partidos_seq.NEXTVAL, :id_equipo_local, :id_equipo_visitante, :fecha, :hora, :estadio, :estado, :marcador_local, :marcador_visitante)
+    INSERT INTO partidos (id_partido, id_equipo_local, id_equipo_visitante, fecha, hora, estadio, estado, marcador_local, marcador_visitante) 
+    VALUES (partidos_seq.NEXTVAL, :id_equipo_local, 
+      :id_equipo_visitante, TO_DATE(:fecha, 'YYYY-MM-DD'), TO_TIMESTAMP(:hora, 'HH24:MI:SS'), :estadio, :estado, :marcador_local, :marcador_visitante)
   `;
 
   let connection;
@@ -68,8 +66,8 @@ router.post("/", async (req, res) => {
     await connection.execute(queryInsert, {
       id_equipo_local,
       id_equipo_visitante,
-      fecha,
-      hora,
+      fecha,       // Valor '2024-12-20'
+      hora,        // Valor '18:00:00'
       estadio,
       estado,
       marcador_local,
@@ -109,8 +107,8 @@ router.put("/:id", async (req, res) => {
       UPDATE partidos
       SET id_equipo_local = :id_equipo_local,
           id_equipo_visitante = :id_equipo_visitante,
-          fecha = :fecha,
-          hora = :hora,
+          fecha = TO_DATE(:fecha, 'YYYY-MM-DD'),
+          hora = TO_TIMESTAMP(:hora, 'HH24:MI:SS'),
           estadio = :estadio,
           estado = :estado,
           marcador_local = :marcador_local,

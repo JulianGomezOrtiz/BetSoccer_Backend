@@ -10,6 +10,8 @@ const apuestasEstatusRoutes = require("./controllers/apuestas_estatus");
 const bancosRoutes = require("./controllers/bancos");
 const transaccionesRoutes = require("./controllers/transacciones");
 const cuentasBancariasRoutes = require("./controllers/cuentas_bancarias");
+const loginRoutes = require("./controllers/login");
+const registroRoutes = require("./controllers/registro");
 
 require("dotenv").config(); // Configuración de variables de entorno
 
@@ -28,7 +30,6 @@ app.use(
 app.use(bodyParser.json());
 
 // ==================== Rutas ====================
-// Rutas relacionadas con partidos
 app.use("/api/equipos", equiposRoutes);
 app.use("/api/partidos", partidosRoutes);
 app.use("/api/usuarios", usuariosRoutes);
@@ -39,11 +40,11 @@ app.use("/api/apuestas_estatus", apuestasEstatusRoutes);
 app.use("/api/bancos", bancosRoutes);
 app.use("/api/cuentas_bancarias", cuentasBancariasRoutes);
 app.use("/api/transacciones", transaccionesRoutes);
-
+app.use("/login", loginRoutes);
+app.use("/register", registroRoutes);
 
 // ==================== Configuración del servidor ====================
-const PORT = process.env.PORT || 3001; // Puerto por defecto o definido en variables de entorno
-
+const PORT = process.env.PORT || 3001; 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`); // Mensaje en consola para indicar que el servidor está funcionando
 });

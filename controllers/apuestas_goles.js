@@ -60,7 +60,7 @@ router.post("/", async (req, res) => {
 
   const queryInsert = `
     INSERT INTO apuestas_goles (id_apuesta, id_usuario, id_partido, id_cuenta, apuesta_goles_local, apuesta_goles_visitante, monto, cuota, estado, ganancia, fecha)
-    VALUES (apuestas_goles_seq.NEXTVAL, :id_usuario, :id_partido, :id_cuenta, :apuesta_goles_local, :apuesta_goles_visitante, :monto, :cuota, :estado, :ganancia, CURRENT_TIMESTAMP)
+    VALUES (apuestas_goles_seq.NEXTVAL, :id_usuario, :id_partido, :id_cuenta, :apuesta_goles_local, :apuesta_goles_visitante, TO_NUMBER(:monto), TO_NUMBER(:cuota), :estado, :ganancia, CURRENT_TIMESTAMP)
   `;
 
   let connection;
